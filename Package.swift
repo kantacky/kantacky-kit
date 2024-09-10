@@ -40,6 +40,7 @@ let package = Package(
         .target(
             name: "LocationClient",
             dependencies: [
+                "Logger",
                 .product(name: "Dependencies", package: "swift-dependencies"),
                 .product(name: "DependenciesMacros", package: "swift-dependencies"),
             ]

@@ -9,6 +9,8 @@ import CoreLocation
 import Logger
 
 final actor LocationManager: NSObject {
+    static let shared = LocationManager()
+
     private let locationManager = CLLocationManager()
 
     private override init() {
@@ -16,7 +18,7 @@ final actor LocationManager: NSObject {
         locationManager.delegate = self
     }
 
-    init(
+    private init(
         desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBestForNavigation,
         distanceFilter: CLLocationDistance = 1,
         activityType: CLActivityType = .fitness
@@ -28,6 +30,8 @@ final actor LocationManager: NSObject {
             await setActivityType(activityType)
         }
     }
+
+    var locationServiceEnabled: Bool { CLLocationManager.locationServicesEnabled() }
 
     var location: CLLocation? { locationManager.location }
     private var locationChangeHandler: @Sendable (CLLocation) -> Void = { _ in }
@@ -73,7 +77,11 @@ extension LocationManager {
 
     func startUpdatingLocation() {
         locationManager.startUpdatingLocation()
-        locationManager.startUpdatingHeading()
+        if CLLocationManager.headingAvailable() {
+            locationManager.startUpdatingHeading()
+        } else {
+            Logger.standard.error("Heading is not available.")
+        }
     }
 
     func stopUpdatingLocation() {
@@ -129,3 +137,7 @@ extension LocationManager: CLLocationManagerDelegate {
         Logger.standard.error("\(error.localizedDescription)")
     }
 }
+
+extension CLLocationManager: @retroactive @unchecked Sendable {}
+
+extension CLHeading: @retroactive @unchecked Sendable {}

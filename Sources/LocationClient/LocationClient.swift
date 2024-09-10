@@ -39,7 +39,7 @@ public struct LocationClient: Sendable {
 
 extension LocationClient: DependencyKey {
     public static let liveValue = { @Sendable in
-        let locationManager = LocationManager()
+        let locationManager = LocationManager.shared
 
         return LocationClient(
             requestWhenInUseAuthorization: {
