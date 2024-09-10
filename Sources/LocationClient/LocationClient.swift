@@ -38,63 +38,59 @@ public struct LocationClient: Sendable {
 }
 
 extension LocationClient: DependencyKey {
-    public static let liveValue = { @Sendable in
-        let locationManager = LocationManager.shared
-
-        return LocationClient(
-            requestWhenInUseAuthorization: {
-                locationManager.requestWhenInUseAuthorization()
-            },
-            requestAlwaysUseAuthorization: {
-                locationManager.requestAlwaysAuthorization()
-            },
-            getAuthorizationStatus: {
-                locationManager.authorizationStatus
-            },
-            getAuthorizationStatusStream: {
-                locationManager.authorizationStatusStream
-            },
-            getAccuracyAuthorization: {
-                locationManager.accuracyAuthorization
-            },
-            getAccuracyAuthorizationStream: {
-                locationManager.accuracyAuthorizationStream
-            },
-            startUpdatingLocation: {
-                locationManager.startUpdatingLocation()
-            },
-            stopUpdatingLocation: {
-                locationManager.stopUpdatingLocation()
-            },
-            enableBackgroundLocationUpdates: {
-                locationManager.enableBackgroundLocationUpdates()
-            },
-            disableBackgroundLocationUpdates: {
-                locationManager.disableBackgroundLocationUpdates()
-            },
-            setDesiredAccuracy: {
-                locationManager.setDesiredAccuracy($0)
-            },
-            setDistanceFilter: {
-                locationManager.setDistanceFilter($0)
-            },
-            setActivityType: {
-                locationManager.setActivityType($0)
-            },
-            getLocation: {
-                locationManager.location
-            },
-            getLocationStream: {
-                locationManager.locationStream
-            },
-            getHeading: {
-                locationManager.heading
-            },
-            getHeadingStream: {
-                locationManager.headingStream
-            }
-        )
-    }()
+    public static let liveValue = LocationClient(
+        requestWhenInUseAuthorization: {
+            LocationManager.shared.requestWhenInUseAuthorization()
+        },
+        requestAlwaysUseAuthorization: {
+            LocationManager.shared.requestAlwaysAuthorization()
+        },
+        getAuthorizationStatus: {
+            LocationManager.shared.authorizationStatus
+        },
+        getAuthorizationStatusStream: {
+            LocationManager.shared.authorizationStatusStream
+        },
+        getAccuracyAuthorization: {
+            LocationManager.shared.accuracyAuthorization
+        },
+        getAccuracyAuthorizationStream: {
+            LocationManager.shared.accuracyAuthorizationStream
+        },
+        startUpdatingLocation: {
+            LocationManager.shared.startUpdatingLocation()
+        },
+        stopUpdatingLocation: {
+            LocationManager.shared.stopUpdatingLocation()
+        },
+        enableBackgroundLocationUpdates: {
+            LocationManager.shared.enableBackgroundLocationUpdates()
+        },
+        disableBackgroundLocationUpdates: {
+            LocationManager.shared.disableBackgroundLocationUpdates()
+        },
+        setDesiredAccuracy: {
+            LocationManager.shared.setDesiredAccuracy($0)
+        },
+        setDistanceFilter: {
+            LocationManager.shared.setDistanceFilter($0)
+        },
+        setActivityType: {
+            LocationManager.shared.setActivityType($0)
+        },
+        getLocation: {
+            LocationManager.shared.location
+        },
+        getLocationStream: {
+            LocationManager.shared.locationStream
+        },
+        getHeading: {
+            LocationManager.shared.heading
+        },
+        getHeadingStream: {
+            LocationManager.shared.headingStream
+        }
+    )
 }
 
 extension LocationClient: TestDependencyKey {
