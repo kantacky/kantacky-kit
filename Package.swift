@@ -23,6 +23,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "11.0.0")),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", .upToNextMajor(from: "1.0.0")),
+        .package(url: "https://github.com/swiftlang/swift-format", .upToNextMajor(from: "600.0.0")),
     ],
     targets: [
         .target(name: "FoundationExtension"),
