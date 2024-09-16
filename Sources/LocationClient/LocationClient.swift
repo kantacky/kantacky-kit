@@ -15,10 +15,12 @@ public struct LocationClient: Sendable {
     public var requestAlwaysUseAuthorization: @Sendable () async -> Void
 
     public var getAuthorizationStatus: @Sendable () async throws -> CLAuthorizationStatus
-    public var getAuthorizationStatusStream: @Sendable () async throws -> AsyncStream<CLAuthorizationStatus>
+    public var getAuthorizationStatusStream:
+        @Sendable () async throws -> AsyncStream<CLAuthorizationStatus>
 
     public var getAccuracyAuthorization: @Sendable () async throws -> CLAccuracyAuthorization
-    public var getAccuracyAuthorizationStream: @Sendable () async throws -> AsyncStream<CLAccuracyAuthorization>
+    public var getAccuracyAuthorizationStream:
+        @Sendable () async throws -> AsyncStream<CLAccuracyAuthorization>
 
     public var startUpdatingLocation: @Sendable () async -> Void
     public var stopUpdatingLocation: @Sendable () async -> Void

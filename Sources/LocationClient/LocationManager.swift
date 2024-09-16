@@ -50,7 +50,8 @@ final actor LocationManager: NSObject {
     }
 
     var authorizationStatus: CLAuthorizationStatus { locationManager.authorizationStatus }
-    private var authorizationStatusChangeHandler: @Sendable (CLAuthorizationStatus) -> Void = { _ in }
+    private var authorizationStatusChangeHandler: @Sendable (CLAuthorizationStatus) -> Void = { _ in
+    }
     var authorizationStatusStream: AsyncStream<CLAuthorizationStatus> {
         AsyncStream { continuation in
             authorizationStatusChangeHandler = { continuation.yield($0) }
@@ -58,7 +59,9 @@ final actor LocationManager: NSObject {
     }
 
     var accuracyAuthorization: CLAccuracyAuthorization { locationManager.accuracyAuthorization }
-    private var accuracyAuthorizationChangeHandler: @Sendable (CLAccuracyAuthorization) -> Void = { _ in }
+    private var accuracyAuthorizationChangeHandler: @Sendable (CLAccuracyAuthorization) -> Void = {
+        _ in
+    }
     var accuracyAuthorizationStream: AsyncStream<CLAccuracyAuthorization> {
         AsyncStream { continuation in
             accuracyAuthorizationChangeHandler = { continuation.yield($0) }
@@ -111,7 +114,9 @@ extension LocationManager {
 }
 
 extension LocationManager: CLLocationManagerDelegate {
-    nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    nonisolated func locationManager(
+        _ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]
+    ) {
         guard let location = locations.first else {
             return
         }
@@ -120,7 +125,9 @@ extension LocationManager: CLLocationManagerDelegate {
         }
     }
 
-    nonisolated func locationManager(_ manager: CLLocationManager, didUpdateHeading heading: CLHeading) {
+    nonisolated func locationManager(
+        _ manager: CLLocationManager, didUpdateHeading heading: CLHeading
+    ) {
         Task {
             await headingChangeHandler(heading)
         }

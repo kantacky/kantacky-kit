@@ -11,8 +11,11 @@ import MapKit
 
 @DependencyClient
 public struct LocalSearchClient: Sendable {
-    public var searchMapItem: @Sendable (_ searchQuery: String, _ region: MKCoordinateRegion?) async throws -> [MKMapItem]
-    public var searchNearby: @Sendable (_ center: CLLocationCoordinate2D, _ radiusMeters: Double) async throws -> [MKMapItem]
+    public var searchMapItem:
+        @Sendable (_ searchQuery: String, _ region: MKCoordinateRegion?) async throws -> [MKMapItem]
+    public var searchNearby:
+        @Sendable (_ center: CLLocationCoordinate2D, _ radiusMeters: Double) async throws ->
+            [MKMapItem]
 }
 
 extension LocalSearchClient: DependencyKey {
@@ -51,7 +54,7 @@ extension LocalSearchClient: DependencyKey {
                 switch error {
                 case MKError.placemarkNotFound:
                     return []
-                    
+
                 default:
                     throw error
                 }
