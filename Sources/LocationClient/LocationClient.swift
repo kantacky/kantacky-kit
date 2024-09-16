@@ -16,11 +16,11 @@ public struct LocationClient: Sendable {
 
     public var getAuthorizationStatus: @Sendable () async throws -> CLAuthorizationStatus
     public var getAuthorizationStatusStream:
-        @Sendable () async throws -> AsyncStream<CLAuthorizationStatus>
+    @Sendable () async throws -> AsyncStream<CLAuthorizationStatus>
 
     public var getAccuracyAuthorization: @Sendable () async throws -> CLAccuracyAuthorization
     public var getAccuracyAuthorizationStream:
-        @Sendable () async throws -> AsyncStream<CLAccuracyAuthorization>
+    @Sendable () async throws -> AsyncStream<CLAccuracyAuthorization>
 
     public var startUpdatingLocation: @Sendable () async -> Void
     public var stopUpdatingLocation: @Sendable () async -> Void
@@ -101,7 +101,13 @@ extension LocationClient: TestDependencyKey {
     public static let previewValue = LocationClient(
         requestWhenInUseAuthorization: {},
         requestAlwaysUseAuthorization: {},
-        getAuthorizationStatus: { .authorizedWhenInUse },
+        getAuthorizationStatus: {
+#if os(macOS)
+            .authorizedAlways
+#else
+            .authorizedWhenInUse
+#endif
+        },
         getAuthorizationStatusStream: {
             AsyncStream { continuation in
                 continuation.yield(.authorizedAlways)

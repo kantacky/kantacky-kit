@@ -89,7 +89,9 @@ extension LocationManager {
 
     func stopUpdatingLocation() {
         locationManager.stopUpdatingLocation()
+#if !os(macOS)
         locationManager.stopUpdatingHeading()
+#endif
     }
 
     func enableBackgroundLocationUpdates() {
