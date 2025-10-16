@@ -13,7 +13,14 @@ let package = Package(
         .watchOS(.v26),
     ],
     products: [
+        .library(
+            name: "HeadphoneMotion",
+            targets: ["HeadphoneMotion"]
+        ),
     ],
     targets: [
+        .target(
+            name: "HeadphoneMotion"
+        ),
     ]
 )
