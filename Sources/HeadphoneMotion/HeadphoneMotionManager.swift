@@ -20,16 +20,11 @@ public final class HeadphoneMotionManager: NSObject, CMHeadphoneMotionManagerDel
         manager.delegate = self
         self.isConnectedStream = AsyncStream { continuation in
             self.isConnectedContinuation = continuation
-            continuation.onTermination = { [weak self] _ in
-                self?.manager.stopConnectionStatusUpdates()
+            continuation.onTermination = { _ in
+                self.manager.stopConnectionStatusUpdates()
             }
         }
         manager.startConnectionStatusUpdates()
-    }
-
-    deinit {
-        isConnectedContinuation?.finish()
-        manager.stopConnectionStatusUpdates()
     }
 
     public func headphoneMotionManagerDidConnect(_ manager: CMHeadphoneMotionManager) {
