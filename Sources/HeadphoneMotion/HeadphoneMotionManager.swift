@@ -25,6 +25,7 @@ public final class HeadphoneMotionManager: NSObject, CMHeadphoneMotionManagerDel
             }
         }
         manager.startConnectionStatusUpdates()
+        isConnectedContinuation?.yield(manager.isConnectionStatusActive)
     }
 
     public func headphoneMotionManagerDidConnect(_ manager: CMHeadphoneMotionManager) {
