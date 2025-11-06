@@ -9,12 +9,11 @@
 
 public final class HeadphoneMotionManager: NSObject, CMHeadphoneMotionManagerDelegate, Sendable {
     private let manager: CMHeadphoneMotionManager
-
-    private let (connectedUpdates, connectionContinuation): (AsyncStream<Bool>, AsyncStream<Bool>.Continuation)
+    private let (_connectionUpdates, connectionContinuation): (AsyncStream<Bool>, AsyncStream<Bool>.Continuation)
 
     public override init() {
-        (connectedUpdates, connectionContinuation) = AsyncStream<Bool>.makeStream()
         self.manager = .init()
+        (_connectionUpdates, connectionContinuation) = AsyncStream<Bool>.makeStream()
         super.init()
         manager.delegate = self
         manager.startConnectionStatusUpdates()
@@ -24,7 +23,7 @@ public final class HeadphoneMotionManager: NSObject, CMHeadphoneMotionManagerDel
     }
 
     public func connectionUpdates() -> AsyncStream<Bool> {
-        connectedUpdates
+        _connectionUpdates
     }
 
     public func headphoneMotionManagerDidConnect(_ manager: CMHeadphoneMotionManager) {

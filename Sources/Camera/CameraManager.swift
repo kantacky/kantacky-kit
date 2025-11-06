@@ -1,0 +1,69 @@
+//
+//  CameraManager.swift
+//  kantacky-kit
+//
+//  Created by Kanta Oikawa on 2025/11/06.
+//
+
+import AVFoundation
+import CoreImage
+
+public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
+    private let session: AVCaptureSession
+    private let (_ciImageUpdates, ciImageContinuation): (AsyncStream<CIImage>, AsyncStream<CIImage>.Continuation)
+
+    override init() {
+        session = .init()
+        (_ciImageUpdates, ciImageContinuation) = AsyncStream<CIImage>.makeStream()
+        super.init()
+    }
+
+    public func ciImageUpdates() throws -> AsyncStream<CIImage> {
+        try configureCaptureSession()
+        session.startRunning()
+        return _ciImageUpdates
+    }
+
+    public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+            return
+        }
+        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+        ciImageContinuation.yield(ciImage)
+    }
+
+    private func configureCaptureSession() throws {
+        session.beginConfiguration()
+        defer { session.commitConfiguration() }
+
+        // Setup Device
+        guard
+            let camera = AVCaptureDevice.default(
+                .builtInWideAngleCamera,
+                for: .video,
+                position: .back
+            )
+        else {
+            throw CameraError.notAvailable
+        }
+
+        // Setup Input
+        let input = try AVCaptureDeviceInput(device: camera)
+        guard session.canAddInput(input) else {
+            throw CameraError.unableToAddInput
+        }
+        session.addInput(input)
+
+        // Setup Output
+        let output = AVCaptureVideoDataOutput()
+        guard session.canAddOutput(output) else {
+            throw CameraError.unableToAddOutput
+        }
+        session.addOutput(output)
+        output.videoSettings = [
+            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
+        ]
+        output.connection(with: .video)?.videoRotationAngle = 90
+        output.setSampleBufferDelegate(self, queue: .main)
+    }
+}

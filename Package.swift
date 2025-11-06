@@ -13,11 +13,18 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "Camera",
+            targets: ["Camera"]
+        ),
+        .library(
             name: "HeadphoneMotion",
             targets: ["HeadphoneMotion"]
         ),
     ],
     targets: [
+        .target(
+            name: "Camera"
+        ),
         .target(
             name: "HeadphoneMotion"
         ),
