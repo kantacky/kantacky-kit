@@ -12,6 +12,7 @@ struct CameraView: View {
 
     var body: some View {
         content
+            .ignoresSafeArea()
             .task {
                 await viewModel.onAppear()
             }
@@ -19,8 +20,11 @@ struct CameraView: View {
 
     @ViewBuilder
     private var content: some View {
-        if let ciImage = viewModel.ciImage {
-            Image(uiImage: .init(ciImage: ciImage))
+        if let uiImage = viewModel.uiImage {
+            Image(uiImage: uiImage)
+                .resizable()
+                .scaledToFill()
+                .clipped()
         } else {
             Text("No Image")
         }

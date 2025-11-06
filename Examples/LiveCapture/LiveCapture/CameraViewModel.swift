@@ -7,12 +7,12 @@
 
 import AVFoundation
 import Camera
-import CoreImage
 import Observation
+import SwiftUI
 
 @Observable
 final class CameraViewModel {
-    private(set) var ciImage: CIImage?
+    private(set) var uiImage: UIImage?
 
     func onAppear() async {
         guard await AVCaptureDevice.requestAccess(for: .video) else {
@@ -26,8 +26,8 @@ final class CameraViewModel {
             autoreleaseFrequency: .workItem
         )
         do {
-            for await ciImage in try await CameraManager().ciImageUpdates(queue: queue) {
-                self.ciImage = ciImage
+            for await cgImage in try await CameraManager().cgImageUpdates(queue: queue) {
+                uiImage = UIImage(cgImage: cgImage)
             }
         } catch {
             print(error)

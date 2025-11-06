@@ -7,24 +7,27 @@
 
 @preconcurrency import AVFoundation
 import CoreImage
+import CoreGraphics
 
 public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Sendable {
     private let session: AVCaptureSession
-    private let (_ciImageUpdates, ciImageContinuation): (AsyncStream<CIImage>, AsyncStream<CIImage>.Continuation)
+    private let ciContext: CIContext
+    private let (_cgImageUpdates, cgImageContinuation): (AsyncStream<CGImage>, AsyncStream<CGImage>.Continuation)
 
     public override init() {
         session = .init()
-        (_ciImageUpdates, ciImageContinuation) = AsyncStream<CIImage>.makeStream()
+        ciContext = .init()
+        (_cgImageUpdates, cgImageContinuation) = AsyncStream<CGImage>.makeStream()
         super.init()
     }
 
-    public func ciImageUpdates(queue: dispatch_queue_t? = .main) async throws -> AsyncStream<CIImage> {
+    public func cgImageUpdates(queue: dispatch_queue_t? = .main) async throws -> AsyncStream<CGImage> {
         try configureCaptureSession(queue: queue)
         session.startRunning()
-        ciImageContinuation.onTermination = { _ in
+        cgImageContinuation.onTermination = { _ in
             self.session.stopRunning()
         }
-        return _ciImageUpdates
+        return _cgImageUpdates
     }
 
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
@@ -32,12 +35,15 @@ public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBuffer
             return
         }
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-        ciImageContinuation.yield(ciImage)
+        guard let cgImage = ciContext.createCGImage(ciImage, from: ciImage.extent) else {
+            return
+        }
+        cgImageContinuation.yield(cgImage)
     }
 
     private func configureCaptureSession(queue: dispatch_queue_t?) throws {
         session.beginConfiguration()
-        session.sessionPreset = .vga640x480
+        session.sessionPreset = .high
         defer { session.commitConfiguration() }
 
         // Setup Device
@@ -69,5 +75,6 @@ public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBuffer
         output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)]
         output.setSampleBufferDelegate(self, queue: queue)
         output.connection(with: .video)?.isEnabled = true
+        output.connection(with: .video)?.videoRotationAngle = 90
     }
 }
