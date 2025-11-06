@@ -20,6 +20,10 @@ let package = Package(
             name: "HeadphoneMotion",
             targets: ["HeadphoneMotion"]
         ),
+        .library(
+            name: "ImageClassification",
+            targets: ["ImageClassification"]
+        ),
     ],
     targets: [
         .target(
@@ -27,6 +31,9 @@ let package = Package(
         ),
         .target(
             name: "HeadphoneMotion"
+        ),
+        .target(
+            name: "ImageClassification"
         ),
     ]
 )
