@@ -34,21 +34,22 @@ public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBuffer
 
     private func configureCaptureSession(queue: dispatch_queue_t?) throws {
         session.beginConfiguration()
+        session.sessionPreset = .vga640x480
         defer { session.commitConfiguration() }
 
         // Setup Device
         guard
-            let camera = AVCaptureDevice.default(
-                .builtInWideAngleCamera,
-                for: .video,
+            let device = AVCaptureDevice.DiscoverySession(
+                deviceTypes: [.builtInWideAngleCamera],
+                mediaType: .video,
                 position: .back
-            )
+            ).devices.first
         else {
             throw CameraError.notAvailable
         }
 
         // Setup Input
-        let input = try AVCaptureDeviceInput(device: camera)
+        let input = try AVCaptureDeviceInput(device: device)
         guard session.canAddInput(input) else {
             throw CameraError.unableToAddInput
         }
@@ -60,10 +61,10 @@ public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBuffer
             throw CameraError.unableToAddOutput
         }
         session.addOutput(output)
-        output.videoSettings = [
-            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
-        ]
-        output.connection(with: .video)?.videoRotationAngle = 90
+
+        output.alwaysDiscardsLateVideoFrames = true
+        output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
         output.setSampleBufferDelegate(self, queue: queue)
+        output.connection(with: .video)?.isEnabled = true
     }
 }

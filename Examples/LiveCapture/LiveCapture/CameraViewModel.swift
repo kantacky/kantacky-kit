@@ -22,8 +22,14 @@ final class CameraViewModel {
             print("Camera access denied")
             return
         }
+        let queue = DispatchQueue(
+            label: "VideoDataOutput",
+            qos: .userInitiated,
+            attributes: [],
+            autoreleaseFrequency: .workItem
+        )
         do {
-            for await ciImage in try await CameraManager().ciImageUpdates() {
+            for await ciImage in try await CameraManager().ciImageUpdates(queue: queue) {
                 self.ciImage = ciImage
             }
         } catch {
