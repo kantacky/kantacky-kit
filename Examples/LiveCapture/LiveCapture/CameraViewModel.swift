@@ -1,0 +1,33 @@
+//
+//  CameraViewModel.swift
+//  LiveCapture
+//
+//  Created by Kanta Oikawa on 2025/11/06.
+//
+
+import AVFoundation
+import Camera
+import CoreImage
+import Observation
+
+@Observable
+final class CameraViewModel {
+    private(set) var ciImage: CIImage?
+
+    @ObservationIgnored
+    private let ciContext = CIContext()
+
+    func onAppear() async {
+        guard await AVCaptureDevice.requestAccess(for: .video) else {
+            print("Camera access denied")
+            return
+        }
+        do {
+            for await ciImage in try CameraManager().ciImageUpdates() {
+                self.ciImage = ciImage
+            }
+        } catch {
+            print(error)
+        }
+    }
+}

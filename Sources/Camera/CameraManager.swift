@@ -12,7 +12,7 @@ public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBuffer
     private let session: AVCaptureSession
     private let (_ciImageUpdates, ciImageContinuation): (AsyncStream<CIImage>, AsyncStream<CIImage>.Continuation)
 
-    override init() {
+    public override init() {
         session = .init()
         (_ciImageUpdates, ciImageContinuation) = AsyncStream<CIImage>.makeStream()
         super.init()
