@@ -8,7 +8,7 @@
 import CoreML
 import Vision
 
-public final actor ImageClassifier<ImageClass> where ImageClass : ImageClassProtocol {
+public final actor ImageClassifier {
     public static func predict(
         with model: VNCoreMLModel,
         for cgImage: CGImage,
@@ -26,7 +26,7 @@ public final actor ImageClassifier<ImageClass> where ImageClass : ImageClassProt
                 }
                 let predictions = observations.map { observation in
                     ImageClass(
-                        rawValue: observation.identifier,
+                        identifier: observation.identifier,
                         confidence: observation.confidence
                     )
                 }

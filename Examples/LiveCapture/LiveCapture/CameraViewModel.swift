@@ -7,12 +7,15 @@
 
 import AVFoundation
 import Camera
+import ImageClassification
 import Observation
 import SwiftUI
+import Vision
 
 @Observable
 final class CameraViewModel {
     private(set) var uiImage: UIImage?
+    private(set) var classifiedVegetable: ImageClass?
 
     func onAppear() async {
         guard await AVCaptureDevice.requestAccess(for: .video) else {
@@ -27,7 +30,14 @@ final class CameraViewModel {
         )
         do {
             for await cgImage in try await CameraManager().cgImageUpdates(queue: queue) {
-                uiImage = UIImage(cgImage: cgImage)
+                let uiImage = UIImage(cgImage: cgImage)
+                self.uiImage = uiImage
+                let model = try VNCoreMLModel(for: VegetableClassifier().model)
+                classifiedVegetable = try await ImageClassifier.predict(
+                    with: model,
+                    for: cgImage,
+                    orientation: CGImagePropertyOrientation(uiImage.imageOrientation)
+                )
             }
         } catch {
             print(error)

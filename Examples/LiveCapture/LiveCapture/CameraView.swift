@@ -5,6 +5,7 @@
 //  Created by Kanta Oikawa on 2025/11/06.
 //
 
+import ImageClassification
 import SwiftUI
 
 struct CameraView: View {
@@ -21,10 +22,22 @@ struct CameraView: View {
     @ViewBuilder
     private var content: some View {
         if let uiImage = viewModel.uiImage {
-            Image(uiImage: uiImage)
-                .resizable()
-                .scaledToFill()
-                .clipped()
+            VStack {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+                    .clipped()
+                if let vegetable = viewModel.classifiedVegetable,
+                   vegetable.confidence > 0.95 {
+                    Text(vegetable.identifier)
+                        .font(.title)
+                        .padding()
+                } else {
+                    Text("Classifying...")
+                        .font(.title)
+                        .padding()
+                }
+            }
         } else {
             Text("No Image")
         }

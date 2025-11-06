@@ -7,7 +7,6 @@
 
 @preconcurrency import AVFoundation
 import CoreImage
-import CoreGraphics
 
 public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Sendable {
     private let session: AVCaptureSession

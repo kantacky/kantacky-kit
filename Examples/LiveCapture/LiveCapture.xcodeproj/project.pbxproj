@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F13170D42EBC736F000D8DC3 /* Camera in Frameworks */ = {isa = PBXBuildFile; productRef = F13170D32EBC736F000D8DC3 /* Camera */; };
+		F17FD5BA2EBCC4CC00E96D75 /* Camera in Frameworks */ = {isa = PBXBuildFile; productRef = F17FD5B92EBCC4CC00E96D75 /* Camera */; };
+		F17FD5BC2EBCC4CC00E96D75 /* ImageClassification in Frameworks */ = {isa = PBXBuildFile; productRef = F17FD5BB2EBCC4CC00E96D75 /* ImageClassification */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +28,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F13170D42EBC736F000D8DC3 /* Camera in Frameworks */,
+				F17FD5BC2EBCC4CC00E96D75 /* ImageClassification in Frameworks */,
+				F17FD5BA2EBCC4CC00E96D75 /* Camera in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,6 +40,7 @@
 			isa = PBXGroup;
 			children = (
 				F13170C02EBC7258000D8DC3 /* LiveCapture */,
+				F17FD5B62EBCC4BB00E96D75 /* Frameworks */,
 				F13170BF2EBC7258000D8DC3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -48,6 +51,13 @@
 				F13170BE2EBC7258000D8DC3 /* LiveCapture.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F17FD5B62EBCC4BB00E96D75 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -70,7 +80,8 @@
 			);
 			name = LiveCapture;
 			packageProductDependencies = (
-				F13170D32EBC736F000D8DC3 /* Camera */,
+				F17FD5B92EBCC4CC00E96D75 /* Camera */,
+				F17FD5BB2EBCC4CC00E96D75 /* ImageClassification */,
 			);
 			productName = LiveCapture;
 			productReference = F13170BE2EBC7258000D8DC3 /* LiveCapture.app */;
@@ -101,7 +112,6 @@
 			mainGroup = F13170B52EBC7257000D8DC3;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				F13170D22EBC736F000D8DC3 /* XCLocalSwiftPackageReference "../../../kantacky-kit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F13170BF2EBC7258000D8DC3 /* Products */;
@@ -354,17 +364,14 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		F13170D22EBC736F000D8DC3 /* XCLocalSwiftPackageReference "../../../kantacky-kit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "../../../kantacky-kit";
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		F13170D32EBC736F000D8DC3 /* Camera */ = {
+		F17FD5B92EBCC4CC00E96D75 /* Camera */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Camera;
+		};
+		F17FD5BB2EBCC4CC00E96D75 /* ImageClassification */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ImageClassification;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
