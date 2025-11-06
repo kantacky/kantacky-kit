@@ -5,10 +5,10 @@
 //  Created by Kanta Oikawa on 2025/11/06.
 //
 
-import AVFoundation
+@preconcurrency import AVFoundation
 import CoreImage
 
-public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
+public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, Sendable {
     private let session: AVCaptureSession
     private let (_ciImageUpdates, ciImageContinuation): (AsyncStream<CIImage>, AsyncStream<CIImage>.Continuation)
 
@@ -21,6 +21,9 @@ public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBuffer
     public func ciImageUpdates(queue: dispatch_queue_t? = .main) async throws -> AsyncStream<CIImage> {
         try configureCaptureSession(queue: queue)
         session.startRunning()
+        ciImageContinuation.onTermination = { _ in
+            self.session.stopRunning()
+        }
         return _ciImageUpdates
     }
 
@@ -63,7 +66,7 @@ public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBuffer
         session.addOutput(output)
 
         output.alwaysDiscardsLateVideoFrames = true
-        output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
+        output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)]
         output.setSampleBufferDelegate(self, queue: queue)
         output.connection(with: .video)?.isEnabled = true
     }

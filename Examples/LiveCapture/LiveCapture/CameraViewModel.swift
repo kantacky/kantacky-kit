@@ -14,9 +14,6 @@ import Observation
 final class CameraViewModel {
     private(set) var ciImage: CIImage?
 
-    @ObservationIgnored
-    private let ciContext = CIContext()
-
     func onAppear() async {
         guard await AVCaptureDevice.requestAccess(for: .video) else {
             print("Camera access denied")
