@@ -18,7 +18,7 @@ public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBuffer
         super.init()
     }
 
-    public func ciImageUpdates(queue: dispatch_queue_t? = .main) throws -> AsyncStream<CIImage> {
+    public func ciImageUpdates(queue: dispatch_queue_t? = .main) async throws -> AsyncStream<CIImage> {
         try configureCaptureSession(queue: queue)
         session.startRunning()
         return _ciImageUpdates

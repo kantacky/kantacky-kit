@@ -23,7 +23,7 @@ final class CameraViewModel {
             return
         }
         do {
-            for await ciImage in try CameraManager().ciImageUpdates() {
+            for await ciImage in try await CameraManager().ciImageUpdates() {
                 self.ciImage = ciImage
             }
         } catch {
