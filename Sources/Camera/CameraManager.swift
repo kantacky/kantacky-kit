@@ -18,8 +18,8 @@ public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBuffer
         super.init()
     }
 
-    public func ciImageUpdates() throws -> AsyncStream<CIImage> {
-        try configureCaptureSession()
+    public func ciImageUpdates(queue: dispatch_queue_t? = .main) throws -> AsyncStream<CIImage> {
+        try configureCaptureSession(queue: queue)
         session.startRunning()
         return _ciImageUpdates
     }
@@ -32,7 +32,7 @@ public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBuffer
         ciImageContinuation.yield(ciImage)
     }
 
-    private func configureCaptureSession() throws {
+    private func configureCaptureSession(queue: dispatch_queue_t?) throws {
         session.beginConfiguration()
         defer { session.commitConfiguration() }
 
@@ -64,6 +64,6 @@ public final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBuffer
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
         ]
         output.connection(with: .video)?.videoRotationAngle = 90
-        output.setSampleBufferDelegate(self, queue: .main)
+        output.setSampleBufferDelegate(self, queue: queue)
     }
 }
