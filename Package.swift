@@ -6,7 +6,6 @@ let package = Package(
     name: "kantacky-kit",
     platforms: [
         .iOS(.v26),
-        .macCatalyst(.v26),
         .macOS(.v26),
         .tvOS(.v26),
         .visionOS(.v26),
