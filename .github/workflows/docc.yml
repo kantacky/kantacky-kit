@@ -1,0 +1,100 @@
+name: Deploy DocC to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build DocC for Camera
+        run: |
+          swift package resolve
+          xcodebuild docbuild \
+            -scheme Camera \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath .derivedData
+
+      - name: Build DocC for HeadphoneMotion
+        run: |
+          xcodebuild docbuild \
+            -scheme HeadphoneMotion \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath .derivedData
+
+      - name: Build DocC for ImageClassification
+        run: |
+          xcodebuild docbuild \
+            -scheme ImageClassification \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath .derivedData
+
+      - name: Merge documentation archives
+        run: |
+          mkdir -p docs
+          for archive in $(find .derivedData -name '*.doccarchive'); do
+            name=$(basename "$archive" .doccarchive)
+            $(xcrun --find docc) process-archive \
+              transform-for-static-hosting "$archive" \
+              --hosting-base-path "kantacky-kit/documentation/${name}" \
+              --output-path "docs/documentation/${name}"
+          done
+
+      - name: Create index page
+        run: |
+          cat > docs/index.html << 'HTMLEOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>kantacky-kit Documentation</title>
+            <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 600px; margin: 80px auto; padding: 0 20px; color: #333; }
+              h1 { font-size: 2em; }
+              ul { list-style: none; padding: 0; }
+              li { margin: 12px 0; }
+              a { color: #007aff; text-decoration: none; font-size: 1.1em; }
+              a:hover { text-decoration: underline; }
+            </style>
+          </head>
+          <body>
+            <h1>kantacky-kit</h1>
+            <p>API Documentation</p>
+            <ul>
+              <li><a href="documentation/Camera/documentation/camera/">Camera</a></li>
+              <li><a href="documentation/HeadphoneMotion/documentation/headphonemotion/">HeadphoneMotion</a></li>
+              <li><a href="documentation/ImageClassification/documentation/imageclassification/">ImageClassification</a></li>
+            </ul>
+          </body>
+          </html>
+          HTMLEOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
