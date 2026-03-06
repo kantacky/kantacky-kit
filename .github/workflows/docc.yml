@@ -32,7 +32,9 @@ jobs:
               -scheme "$scheme" \
               -destination 'generic/platform=iOS' \
               -derivedDataPath ".derivedData-${scheme}"
-            archive=$(find ".derivedData-${scheme}" -name '*.doccarchive' | head -1)
+            archive=".derivedData-${scheme}/Build/Products/Debug-iphoneos/${scheme}.doccarchive"
+            echo "Looking for archive at: ${archive}"
+            ls -la "$archive" || { echo "Archive not found, searching..."; find ".derivedData-${scheme}" -name '*.doccarchive' -ls; exit 1; }
             $(xcrun --find docc) process-archive \
               transform-for-static-hosting "$archive" \
               --hosting-base-path "kantacky-kit/documentation/${scheme}" \
