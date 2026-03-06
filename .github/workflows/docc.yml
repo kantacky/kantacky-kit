@@ -23,37 +23,20 @@ jobs:
       - name: Setup Xcode
         run: xcodes select
 
-      - name: Build DocC for Camera
+      - name: Build and process DocC
         run: |
           swift package resolve
-          xcodebuild docbuild \
-            -scheme Camera \
-            -destination 'generic/platform=iOS' \
-            -derivedDataPath .derivedData
-
-      - name: Build DocC for HeadphoneMotion
-        run: |
-          xcodebuild docbuild \
-            -scheme HeadphoneMotion \
-            -destination 'generic/platform=iOS' \
-            -derivedDataPath .derivedData
-
-      - name: Build DocC for ImageClassification
-        run: |
-          xcodebuild docbuild \
-            -scheme ImageClassification \
-            -destination 'generic/platform=iOS' \
-            -derivedDataPath .derivedData
-
-      - name: Merge documentation archives
-        run: |
           mkdir -p docs
-          find .derivedData -name '*.doccarchive' -print0 | while IFS= read -r -d '' archive; do
-            name=$(basename "$archive" .doccarchive)
+          for scheme in Camera HeadphoneMotion ImageClassification; do
+            xcodebuild docbuild \
+              -scheme "$scheme" \
+              -destination 'generic/platform=iOS' \
+              -derivedDataPath ".derivedData-${scheme}"
+            archive=$(find ".derivedData-${scheme}" -name '*.doccarchive' | head -1)
             $(xcrun --find docc) process-archive \
               transform-for-static-hosting "$archive" \
-              --hosting-base-path "kantacky-kit/documentation/${name}" \
-              --output-path "docs/documentation/${name}"
+              --hosting-base-path "kantacky-kit/documentation/${scheme}" \
+              --output-path "docs/documentation/${scheme}"
           done
 
       - name: Create index page
