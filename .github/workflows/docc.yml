@@ -48,7 +48,7 @@ jobs:
       - name: Merge documentation archives
         run: |
           mkdir -p docs
-          for archive in $(find .derivedData -name '*.doccarchive'); do
+          find .derivedData -name '*.doccarchive' -print0 | while IFS= read -r -d '' archive; do
             name=$(basename "$archive" .doccarchive)
             $(xcrun --find docc) process-archive \
               transform-for-static-hosting "$archive" \
