@@ -6,6 +6,7 @@
 //
 
 import CoreImage
+#if canImport(UIKit)
 import UIKit.UIImage
 
 extension CGImagePropertyOrientation {
@@ -23,3 +24,4 @@ extension CGImagePropertyOrientation {
         }
     }
 }
+#endif
