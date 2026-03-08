@@ -17,67 +17,48 @@ concurrency:
 jobs:
   build:
     runs-on: macos-26
+    strategy:
+      matrix:
+        target: [Camera, HeadphoneMotion, ImageClassification]
     steps:
       - uses: actions/checkout@v6
 
       - name: Setup Xcode
         run: xcodes select
 
-      - name: Build and process DocC
+      - name: Build DocC for ${{ matrix.target }}
         run: |
-          swift package resolve
-          mkdir -p docs
-          for scheme in Camera HeadphoneMotion ImageClassification; do
-            xcodebuild docbuild \
-              -scheme "$scheme" \
-              -destination 'generic/platform=iOS' \
-              -derivedDataPath ".derivedData-${scheme}"
-            archive=".derivedData-${scheme}/Build/Products/Debug-iphoneos/${scheme}.doccarchive"
-            echo "Looking for archive at: ${archive}"
-            ls -la "$archive" || { echo "Archive not found, searching..."; find ".derivedData-${scheme}" -name '*.doccarchive' -ls; exit 1; }
-            $(xcrun --find docc) process-archive \
-              transform-for-static-hosting "$archive" \
-              --hosting-base-path "kantacky-kit/documentation/${scheme}" \
-              --output-path "docs/documentation/${scheme}"
-          done
-
-      - name: Create index page
-        run: |
-          cat > docs/index.html << 'HTMLEOF'
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>kantacky-kit Documentation</title>
-            <style>
-              body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 600px; margin: 80px auto; padding: 0 20px; color: #333; }
-              h1 { font-size: 2em; }
-              ul { list-style: none; padding: 0; }
-              li { margin: 12px 0; }
-              a { color: #007aff; text-decoration: none; font-size: 1.1em; }
-              a:hover { text-decoration: underline; }
-            </style>
-          </head>
-          <body>
-            <h1>kantacky-kit</h1>
-            <p>API Documentation</p>
-            <ul>
-              <li><a href="documentation/Camera/documentation/camera/">Camera</a></li>
-              <li><a href="documentation/HeadphoneMotion/documentation/headphonemotion/">HeadphoneMotion</a></li>
-              <li><a href="documentation/ImageClassification/documentation/imageclassification/">ImageClassification</a></li>
-            </ul>
-          </body>
-          </html>
-          HTMLEOF
+          swift package --allow-writing-to-directory ./docs/${{ matrix.target }} generate-documentation \
+          --target ${{ matrix.target }} \
+          --disable-indexing \
+          --output-path ./docs/${{ matrix.target }} \
+          --transform-for-static-hosting \
+          --hosting-base-path kantacky-kit
 
       - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-${{ matrix.target }}
+          path: docs/${{ matrix.target }}
+
+  merge:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: docs
+          pattern: docs-*
+          merge-multiple: true
+
+      - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs
 
   deploy:
-    needs: build
+    needs: merge
     runs-on: ubuntu-latest
     environment:
       name: github-pages
