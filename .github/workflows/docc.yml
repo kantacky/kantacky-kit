@@ -28,7 +28,8 @@ jobs:
 
       - name: Build DocC for ${{ matrix.target }}
         run: |
-          swift package --allow-writing-to-directory ./docs generate-documentation \
+          mkdir -p ./docs/${{ matrix.target }}
+          swift package --allow-writing-to-directory ./docs/${{ matrix.target }} generate-documentation \
           --target ${{ matrix.target }} \
           --disable-indexing \
           --output-path ./docs/${{ matrix.target }} \
