@@ -38,7 +38,7 @@ jobs:
           path: docs
 
   deploy:
-    needs: merge
+    needs: build
     runs-on: macos-26
     permissions:
       pages: write
