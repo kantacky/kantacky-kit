@@ -13,25 +13,24 @@ concurrency:
 jobs:
   build:
     runs-on: macos-26
-    strategy:
-      matrix:
-        target:
-          - Camera
-          - HeadphoneMotion
-          - ImageClassification
     steps:
       - uses: actions/checkout@v6
       - name: Setup Xcode
         run: xcodes select
-      - name: Build DocC for ${{ matrix.target }}
+      - name: Build DocC
         run: |
           mkdir -p ./docs
-          swift package --allow-writing-to-directory ./docs generate-documentation \
-          --target ${{ matrix.target }} \
-          --disable-indexing \
-          --output-path ./docs \
-          --transform-for-static-hosting \
-          --hosting-base-path kantacky-kit
+          swift package \
+            --allow-writing-to-directory ./docs \
+            generate-documentation \
+            --enable-experimental-combined-documentation \
+            --target Camera \
+            --target HeadphoneMotion \
+            --target ImageClassification \
+            --output-path ./docs \
+            --disable-indexing \
+            --transform-for-static-hosting \
+            --hosting-base-path kantacky-kit
       - uses: actions/upload-artifact@v7
         id: docs
         with:
