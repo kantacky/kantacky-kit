@@ -32,6 +32,14 @@ jobs:
           --output-path ./docs/${{ matrix.target }} \
           --transform-for-static-hosting \
           --hosting-base-path kantacky-kit
+      - name: Sanitize filenames for artifact upload
+        run: |
+          find ./docs/${{ matrix.target }} -depth -name '*[:\"<>|*?\r\n]*' | while IFS= read -r src; do
+            dir=$(dirname "$src")
+            base=$(basename "$src")
+            sanitized=$(echo "$base" | tr ':\"<>|*?' '_')
+            mv "$src" "$dir/$sanitized"
+          done
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
