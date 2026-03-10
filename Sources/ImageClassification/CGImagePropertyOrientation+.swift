@@ -10,6 +10,9 @@ import CoreImage
 import UIKit.UIImage
 
 extension CGImagePropertyOrientation {
+    /// Creates a `CGImagePropertyOrientation` from a `UIImage.Orientation` value.
+    ///
+    /// - Parameter orientation: The `UIImage.Orientation` to convert.
     public init(_ orientation: UIImage.Orientation) {
         switch orientation {
         case .up: self = .up

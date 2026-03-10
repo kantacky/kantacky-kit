@@ -7,7 +7,24 @@
 
 @preconcurrency import CoreMotion
 
+/// Provides an asynchronous stream of headphone device motion data.
+///
+/// Use ``updates(queue:)`` to receive continuous `CMDeviceMotion` values from motion-capable headphones.
+///
+/// ```swift
+/// for try await motion in try HeadphoneMotionUpdate.updates() {
+///     print("Attitude: \(motion.attitude)")
+/// }
+/// ```
 public enum HeadphoneMotionUpdate: Sendable {
+    /// Starts headphone device motion updates and returns them as an asynchronous throwing stream.
+    ///
+    /// Motion updates stop automatically when the returned stream is terminated.
+    ///
+    /// - Parameter queue: The operation queue on which motion updates are delivered. Defaults to the current queue.
+    /// - Returns: An `AsyncThrowingStream` that yields `CMDeviceMotion` values.
+    /// - Throws: ``HeadphoneMotionError/notAvailable`` if the device does not support headphone motion,
+    ///   or ``HeadphoneMotionError/notAuthorized(_:)`` if the app lacks authorization.
     public static func updates(queue: OperationQueue? = .current) throws -> AsyncThrowingStream<CMDeviceMotion, Error> {
         let manager = CMHeadphoneMotionManager()
 
