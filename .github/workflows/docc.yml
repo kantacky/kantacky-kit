@@ -25,40 +25,15 @@ jobs:
         run: xcodes select
       - name: Build DocC for ${{ matrix.target }}
         run: |
-          mkdir -p ./docs/${{ matrix.target }}
-          swift package --allow-writing-to-directory ./docs/${{ matrix.target }} generate-documentation \
+          mkdir -p ./docs
+          swift package --allow-writing-to-directory ./docs generate-documentation \
           --target ${{ matrix.target }} \
           --disable-indexing \
-          --output-path ./docs/${{ matrix.target }} \
+          --output-path ./docs \
           --transform-for-static-hosting \
           --hosting-base-path kantacky-kit
-      - name: Sanitize filenames for artifact upload
-        run: |
-          find ./docs/${{ matrix.target }} -depth -name '*[:\"<>|*?\r\n]*' | while IFS= read -r src; do
-            dir=$(dirname "$src")
-            base=$(basename "$src")
-            sanitized=$(echo "$base" | tr ':\"<>|*?' '_')
-            mv "$src" "$dir/$sanitized"
-          done
-      - name: Upload artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: docs-${{ matrix.target }}
-          path: docs/${{ matrix.target }}
-
-  merge:
-    needs: build
-    runs-on: macos-26
-    steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v8
-        with:
-          path: docs
-          pattern: docs-*
-          merge-multiple: true
-
-      - name: Upload pages artifact
-        uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-artifact@v7
+        id: docs
         with:
           path: docs
 
@@ -73,5 +48,5 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
-        id: deployment
+        id: docs
         uses: actions/deploy-pages@v4
