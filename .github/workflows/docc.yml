@@ -31,8 +31,7 @@ jobs:
             --disable-indexing \
             --transform-for-static-hosting \
             --hosting-base-path kantacky-kit
-      - uses: actions/upload-artifact@v7
-        id: docs
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: docs
 
@@ -47,5 +46,5 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
-        id: docs
+        id: deployment
         uses: actions/deploy-pages@v4
