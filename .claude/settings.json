@@ -1,0 +1,69 @@
+{
+  "defaultMode": "default",
+  "enabledMcpjsonServers": [
+    "xcode"
+  ],
+  "enabledPlugins": {
+    "codex@openai-codex": true,
+    "context7@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true
+  },
+  "permissions": {
+    "allow": [
+      "Edit",
+      "Read",
+      "Write",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_context7_context7__query-docs",
+      "mcp__xcode__DocumentationSearch",
+      "mcp__xcode__GetBuildLog",
+      "mcp__xcode__GetConsoleOutput",
+      "mcp__xcode__GetCrashIssueLogs",
+      "mcp__xcode__GetFieldPerformanceIssueLogs",
+      "mcp__xcode__GetFileCompilerFlags",
+      "mcp__xcode__GetTargetBuildSettings",
+      "mcp__xcode__GetTestList",
+      "mcp__xcode__GetTopCrashIssues",
+      "mcp__xcode__GetTopFieldPerformanceIssues",
+      "mcp__xcode__StringCatalogContext",
+      "mcp__xcode__StringCatalogRead",
+      "mcp__xcode__XcodeGetCurrentFile",
+      "mcp__xcode__XcodeGlob",
+      "mcp__xcode__XcodeGrep",
+      "mcp__xcode__XcodeLS",
+      "mcp__xcode__XcodeListNavigatorIssues",
+      "mcp__xcode__XcodeListRunDestinations",
+      "mcp__xcode__XcodeListSchemes",
+      "mcp__xcode__XcodeListWindows",
+      "mcp__xcode__XcodeRead",
+      "mcp__xcode__XcodeRefreshCodeIssuesInFile",
+      "mcp__xcode__BuildProject",
+      "mcp__xcode__RenderPreview",
+      "mcp__xcode__RunCodeSnippet",
+      "mcp__xcode__RunProject",
+      "mcp__xcode__StopProject",
+      "mcp__xcode__RunAllTests",
+      "mcp__xcode__RunSomeTests",
+      "mcp__xcode__InvokeDebuggerCommand",
+      "mcp__xcode__DeviceInteractionStartSession",
+      "mcp__xcode__DeviceInteractionInstallAndRun",
+      "mcp__xcode__DeviceInteractionSynthesize",
+      "mcp__xcode__DeviceInteractionEndSession",
+      "mcp__xcode__XcodeSwitchScheme",
+      "mcp__xcode__XcodeSwitchRunDestination"
+    ],
+    "ask": [
+      "mcp__xcode__AddEntitlement",
+      "mcp__xcode__AddInfoPlist",
+      "mcp__xcode__LocalizationPlanner",
+      "mcp__xcode__StringCatalogEdit",
+      "mcp__xcode__UpdateFileCompilerFlags",
+      "mcp__xcode__UpdateTargetBuildSetting",
+      "mcp__xcode__XcodeWrite",
+      "mcp__xcode__XcodeUpdate",
+      "mcp__xcode__XcodeMV",
+      "mcp__xcode__XcodeMakeDir",
+      "mcp__xcode__XcodeRM"
+    ]
+  }
+}
