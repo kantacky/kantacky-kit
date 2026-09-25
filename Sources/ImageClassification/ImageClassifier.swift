@@ -5,8 +5,8 @@
 //  Created by Kanta Oikawa on 2025/11/06.
 //
 
-import CoreML
-import Vision
+public import CoreML
+public import Vision
 
 /// An actor that performs image classification using a Core ML model via the Vision framework.
 public final actor ImageClassifier {

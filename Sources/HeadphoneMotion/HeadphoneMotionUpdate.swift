@@ -5,7 +5,7 @@
 //  Created by Kanta Oikawa on 2025/10/16.
 //
 
-@preconcurrency import CoreMotion
+@preconcurrency public import CoreMotion
 
 /// Provides an asynchronous stream of headphone device motion data.
 ///
@@ -25,7 +25,7 @@ public enum HeadphoneMotionUpdate: Sendable {
     /// - Returns: An `AsyncThrowingStream` that yields `CMDeviceMotion` values.
     /// - Throws: ``HeadphoneMotionError/notAvailable`` if the device does not support headphone motion,
     ///   or ``HeadphoneMotionError/notAuthorized(_:)`` if the app lacks authorization.
-    public static func updates(queue: OperationQueue? = .current) throws -> AsyncThrowingStream<CMDeviceMotion, Error> {
+    public static func updates(queue: OperationQueue? = .current) throws -> AsyncThrowingStream<CMDeviceMotion, any Error> {
         let manager = CMHeadphoneMotionManager()
 
         guard manager.isDeviceMotionAvailable else {

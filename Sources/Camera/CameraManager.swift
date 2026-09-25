@@ -5,7 +5,7 @@
 //  Created by Kanta Oikawa on 2025/11/06.
 //
 
-@preconcurrency import AVFoundation
+@preconcurrency public import AVFoundation
 import CoreImage
 
 /// A manager that captures video frames from the device camera and delivers them as `CGImage` via an `AsyncStream`.

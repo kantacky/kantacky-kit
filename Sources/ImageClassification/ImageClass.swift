@@ -5,7 +5,7 @@
 //  Created by Kanta Oikawa on 2025/11/06.
 //
 
-import Vision
+public import Vision
 
 /// A classification result containing the predicted label and its confidence score.
 public struct ImageClass: Sendable {

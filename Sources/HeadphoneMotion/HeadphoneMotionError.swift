@@ -5,7 +5,7 @@
 //  Created by Kanta Oikawa on 2025/10/16.
 //
 
-import CoreMotion
+public import CoreMotion
 
 /// Errors that can occur when starting headphone motion updates.
 public enum HeadphoneMotionError: Error, Sendable {

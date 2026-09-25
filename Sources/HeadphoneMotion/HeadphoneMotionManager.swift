@@ -5,7 +5,7 @@
 //  Created by Kanta Oikawa on 2025/10/19.
 //
 
-@preconcurrency import CoreMotion
+@preconcurrency public import CoreMotion
 
 /// A manager that tracks headphone connection status and delivers updates via an `AsyncStream`.
 ///

@@ -5,9 +5,9 @@
 //  Created by Kanta Oikawa on 2025/11/06.
 //
 
-import CoreImage
+public import ImageIO
 #if canImport(UIKit)
-import UIKit.UIImage
+public import UIKit.UIImage
 
 extension CGImagePropertyOrientation {
     /// Creates a `CGImagePropertyOrientation` from a `UIImage.Orientation` value.
